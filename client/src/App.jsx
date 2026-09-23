@@ -14,6 +14,7 @@ export default function App() {
  <StatCard label="В работе" value="4" note="Нужны сегодня" />
  <StatCard label="Готово" value="6" note="Хороший темп" />
  <StatCard label="Проектов" value="3" note="Учёба и портфолио" />
+  <StatCard label="Просрочено" value="80" note="Тяжело-тяжело" />
  </section>
  <section className="panel">
  <div className="sectionHeading">

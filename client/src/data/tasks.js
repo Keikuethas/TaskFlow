@@ -24,7 +24,7 @@ export const tasks = [
  dueDate: '18 сентября',
  },
  {
- id: 4,
+ id: 5,
  title: 'Проверить мобильную версию',
  project: 'Интерфейс',
  status: 'Нужно сделать',
