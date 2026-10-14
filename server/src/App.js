@@ -8,6 +8,7 @@ let tasks = [
     {
         id: '11111111-1111-4111-8111-111111111111',
         title: 'Подготовить макет главной страницы',
+        description: 'Использовать Figma',
         project: 'Учебный проект',
         status: 'В работе',
         priority: 'Высокий',
@@ -16,6 +17,7 @@ let tasks = [
     {
         id: '22222222-2222-4222-8222-222222222222',
         title: 'Разобраться с REST API',
+        description: 'Попросить ИИ объяснить, поэскпериментировать в VS Code',
         project: 'Обучение',
         status: 'Нужно сделать',
         priority: 'Средний',
@@ -24,6 +26,7 @@ let tasks = [
     {
         id: '33333333-3333-4333-8333-333333333333',
         title: 'Проверить запросы к серверу',
+        description: 'Использовать REST Client',
         project: 'TaskFlow',
         status: 'Готово',
         priority: 'Низкий',
@@ -48,32 +51,47 @@ function validateTask(data, partial = false) {
             errors.push('Поле title обязательно');
         }
     }
+
     if (!partial || data.project !== undefined) {
         if (typeof data.project !== 'string' || !data.project.trim()) {
             errors.push('Поле project обязательно');
         }
     }
+
     if (
         data.status !== undefined &&
         !allowedStatuses.includes(data.status)
     ) {
         errors.push('Недопустимый status');
     }
+
     if (
         data.priority !== undefined &&
         !allowedPriorities.includes(data.priority)
     ) {
         errors.push('Недопустимый priority');
     }
+
     if (
         data.dueDate !== undefined &&
         typeof data.dueDate !== 'string'
     ) {
         errors.push('Поле dueDate должно быть строкой');
     }
+
     if (partial && Object.keys(data).length === 0) {
         errors.push('Передайте хотя бы одно поле для изменения');
     }
+
+    if (
+        data.dueDate !== undefined &&
+        (typeof data.dueDate !== 'string' ||
+            !/^\d{4}-\d{2}-\d{2}$/.test(data.dueDate))
+    ) {
+        errors.push('Поле dueDate должно иметь формат YYYY-MM-DD');
+    }
+
+
     return errors;
 }
 
@@ -82,16 +100,27 @@ app.get('/api/health', (req, res) => {
 });
 
 app.get('/api/tasks', (req, res) => {
-    const { status, priority } = req.query;
+    const { status, priority, project } = req.query;
     let result = tasks;
+
     if (status) {
-        result = result.filter((task) => task.status === status);
+        result = result.filter(
+            (task) => task.status === status
+        );
     }
+
     if (priority) {
         result = result.filter(
             (task) => task.priority === priority
         );
     }
+
+    if (project) {
+        result = result.filter(
+            (task) => task.project == project
+        );
+    }
+
     res.json(result);
 });
 
@@ -115,6 +144,9 @@ app.post('/api/tasks', (req, res) => {
     const newTask = {
         id: randomUUID(),
         title: req.body.title.trim(),
+        description: req.body.description !== undefined
+            ? req.body.description.trim()
+            : '',
         project: req.body.project.trim(),
         status: req.body.status ?? 'Нужно сделать',
         priority: req.body.priority ?? 'Средний',
@@ -143,6 +175,9 @@ app.patch('/api/tasks/:id', (req, res) => {
         title: req.body.title !== undefined
             ? req.body.title.trim()
             : currentTask.title,
+        description: req.body.description !== undefined
+            ? req.body.description.trim()
+            : currentTask.description,
         project: req.body.project !== undefined
             ? req.body.project.trim()
             : currentTask.project,
