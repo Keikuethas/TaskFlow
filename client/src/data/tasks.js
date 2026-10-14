@@ -24,7 +24,7 @@ export const tasks = [
  dueDate: '18 сентября',
  },
  {
- id: 5,
+ id: 4,
  title: 'Проверить мобильную версию',
  project: 'Интерфейс',
  status: 'Нужно сделать',
@@ -38,5 +38,13 @@ export const tasks = [
  status: 'Готово',
  priority: 'Низкий',
  dueDate: '22 сентября',
+ },
+ {
+ id: 6,
+ title: 'Добавить ещё две задачи',
+ project: 'TaskFlow',
+ status: 'В работе',
+ priority: 'Низкий',
+ dueDate: '25 сентября',
  },
 ];
